@@ -1,11 +1,10 @@
 name: phpunit
 on: [push]
 jobs:
-  build-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: php-actions/composer@v6
       - uses: php-actions/phpunit@v3
         with:
           bootstrap: vendor/autoload.php
