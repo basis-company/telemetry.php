@@ -26,7 +26,7 @@ class ExporterTest extends TestCase
         $info->set('uptime', 'Uptime', Type::COUNTER);
 
         $exporter = new Exporter($registry, $info);
-        $array = $exporter->toArray();
+        $array = $exporter->toArray(['env' => 'test']);
         $this->assertCount(4, $array);
 
         $map = [];
@@ -46,34 +46,50 @@ class ExporterTest extends TestCase
         $this->assertSame($map['memory_usage']['help'], 'Memory usage');
         $this->assertSame($map['memory_usage']['key'], 'memory_usage');
         $this->assertSame($map['memory_usage']['type'], Type::GAUGE);
+        $this->assertSame($map['memory_usage']['labels'], [ 'env' => 'test' ]);
 
         $this->assertSame($map['request_counter1']['help'], 'Request Counter');
         $this->assertSame($map['request_counter1']['key'], 'request_counter');
         $this->assertSame($map['request_counter1']['type'], Type::COUNTER);
         $this->assertSame($map['request_counter1']['value'], 1);
+        $this->assertSame($map['request_counter1']['labels'], [ 'env' => 'test', 'user' => 1 ]);
 
         $this->assertSame($map['request_counter2']['help'], 'Request Counter');
         $this->assertSame($map['request_counter2']['key'], 'request_counter');
         $this->assertSame($map['request_counter2']['type'], Type::COUNTER);
         $this->assertSame($map['request_counter2']['value'], 2);
+        $this->assertSame($map['request_counter2']['labels'], [ 'env' => 'test', 'user' => 2 ]);
 
         $this->assertSame($map['uptime']['help'], 'Uptime');
         $this->assertSame($map['uptime']['key'], 'uptime');
         $this->assertSame($map['uptime']['type'], Type::COUNTER);
         $this->assertSame($map['uptime']['value'], 30);
+        $this->assertSame($map['uptime']['labels'], [ 'env' => 'test' ]);
 
         $prometheus = new Prometheus($registry, $info);
 
-        $prometheus = $prometheus->toString('svc_');
+        $result = $prometheus->toString('svc_');
 
-        $this->assertStringContainsString('HELP svc_memory_usage Memory usage', $prometheus);
-        $this->assertStringContainsString('HELP svc_request_counter Request Counter', $prometheus);
-        $this->assertStringContainsString('HELP svc_uptime Uptime', $prometheus);
-        $this->assertStringContainsString('TYPE svc_memory_usage gauge', $prometheus);
-        $this->assertStringContainsString('TYPE svc_request_counter counter', $prometheus);
-        $this->assertStringContainsString('TYPE svc_uptime counter', $prometheus);
+        $this->assertStringContainsString('HELP svc_memory_usage Memory usage', $result);
+        $this->assertStringContainsString('HELP svc_request_counter Request Counter', $result);
+        $this->assertStringContainsString('HELP svc_uptime Uptime', $result);
+        $this->assertStringContainsString('TYPE svc_memory_usage gauge', $result);
+        $this->assertStringContainsString('TYPE svc_request_counter counter', $result);
+        $this->assertStringContainsString('TYPE svc_uptime counter', $result);
 
-        $this->assertCount(2, explode('HELP svc_request_counter', $prometheus));
+        $this->assertCount(2, explode('HELP svc_request_counter', $result));
+    }
+    public function testExtraLabels()
+    {
+        $registry = new Registry();
+        $registry->set('request_counter', 27);
+        $info = new Info();
+        $info->set('request_counter', 'Request Counter');
+
+        $prometheus = new Prometheus($registry, $info);
+        $result = $prometheus->toString('svc_', [ 'hostname' => 'tester' ]);
+
+        $this->assertStringContainsString('svc_request_counter{hostname="tester"} 27', $result);
     }
 
     public function testInfoMissmatch()

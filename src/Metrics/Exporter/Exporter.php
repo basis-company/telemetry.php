@@ -12,7 +12,7 @@ class Exporter
     {
     }
 
-    public function toArray(): array
+    public function toArray(array $labels = []): array
     {
         $result = [];
 
@@ -21,6 +21,7 @@ class Exporter
                 throw new DomainException("No Info for " . $row['key']);
             }
             $info = $this->info->get($row['key']);
+            $row['labels'] = array_merge($labels, $row['labels']);
             $result[] = array_merge($row, $info);
         }
 

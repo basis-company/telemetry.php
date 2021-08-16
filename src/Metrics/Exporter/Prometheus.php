@@ -7,12 +7,12 @@ use Basis\Telemetry\Metrics\Registry;
 
 class Prometheus extends Exporter
 {
-    public function toString(string $prefix = ''): string
+    public function toString(string $prefix = '', array $labels = []): string
     {
         $info = [];
         $result = [];
 
-        foreach ($this->toArray() as $row) {
+        foreach ($this->toArray($labels) as $row) {
             $key = $prefix . $row['key'];
 
             if (!array_key_exists($key, $info)) {
@@ -21,12 +21,12 @@ class Prometheus extends Exporter
                 $info[$key] = true;
             }
 
-            $labels = [];
+            $rowLabels = [];
             foreach ($row['labels'] as $k => $v) {
-                $labels[] = sprintf('%s="%s"', $k, $v);
+                $rowLabels[] = sprintf('%s="%s"', $k, $v);
             }
-            if (count($labels)) {
-                $key .= '{' . implode(',', $labels) . '}';
+            if (count($rowLabels)) {
+                $key .= '{' . implode(',', $rowLabels) . '}';
             }
 
             $result[] = sprintf('%s %s', $key, $row['value']);
