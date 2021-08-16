@@ -20,6 +20,8 @@ class OperationsTest extends TestCase
             ->increment('todo_counter', -1, [ 'queue' => 'tester', ])
             ->set('activity_timestamp', time());
 
+        $this->assertSame(6, $operations->count());
+
         $operations->apply($registry);
 
         $this->assertSame(1, $registry->get('request_counter', [ 'hostname' => 1 ]));

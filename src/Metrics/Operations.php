@@ -38,4 +38,9 @@ class Operations
         }
         return $this;
     }
+
+    public function count()
+    {
+        return count($this->data);
+    }
 }
