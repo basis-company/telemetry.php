@@ -8,7 +8,7 @@ use Basis\Telemetry\Metrics\Exporter;
 use Basis\Telemetry\Metrics\Info;
 use Basis\Telemetry\Metrics\Registry;
 
-class Prometheus extends Exporter
+class PrometheusExporter extends Exporter
 {
     public function toString(string $prefix = '', array $labels = []): string
     {

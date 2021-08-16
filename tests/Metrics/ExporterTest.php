@@ -3,7 +3,7 @@
 namespace Tests\Metrics;
 
 use Basis\Telemetry\Metrics\Exporter;
-use Basis\Telemetry\Metrics\Exporter\Prometheus;
+use Basis\Telemetry\Metrics\Exporter\PrometheusExporter;
 use Basis\Telemetry\Metrics\Info;
 use Basis\Telemetry\Metrics\Registry;
 use Basis\Telemetry\Metrics\Type;
@@ -66,9 +66,8 @@ class ExporterTest extends TestCase
         $this->assertSame($map['uptime']['value'], 30);
         $this->assertSame($map['uptime']['labels'], [ 'env' => 'test' ]);
 
-        $prometheus = new Prometheus($registry, $info);
-
-        $result = $prometheus->toString('svc_');
+        $exporter = new PrometheusExporter($registry, $info);
+        $result = $exporter->toString('svc_');
 
         $this->assertStringContainsString('HELP svc_memory_usage Memory usage', $result);
         $this->assertStringContainsString('HELP svc_request_counter Request Counter', $result);
@@ -86,8 +85,8 @@ class ExporterTest extends TestCase
         $info = new Info();
         $info->set('request_counter', 'Request Counter');
 
-        $prometheus = new Prometheus($registry, $info);
-        $result = $prometheus->toString('svc_', [ 'hostname' => 'tester' ]);
+        $exporter = new PrometheusExporter($registry, $info);
+        $result = $exporter->toString('svc_', [ 'hostname' => 'tester' ]);
 
         $this->assertStringContainsString('svc_request_counter{hostname="tester"} 27', $result);
     }
