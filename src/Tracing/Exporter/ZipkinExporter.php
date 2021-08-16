@@ -8,7 +8,7 @@ use Basis\Telemetry\Tracing\Exporter;
 use Basis\Telemetry\Tracing\Span;
 use Basis\Telemetry\Tracing\Tracer;
 
-class Zipkin extends Exporter
+class ZipkinExporter extends Exporter
 {
     public function __construct(private array $endpoint = [])
     {

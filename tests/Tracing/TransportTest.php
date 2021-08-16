@@ -2,9 +2,9 @@
 
 namespace Tests\Tracing;
 
-use Basis\Telemetry\Tracing\Exporter\Zipkin as ZipkinExporter;
+use Basis\Telemetry\Tracing\Exporter\ZipkinExporter;
 use Basis\Telemetry\Tracing\Tracer;
-use Basis\Telemetry\Tracing\Transport\Zipkin as ZipkinTransport;
+use Basis\Telemetry\Tracing\Transport\ZipkinTransport;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;

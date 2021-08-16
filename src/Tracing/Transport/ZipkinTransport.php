@@ -9,7 +9,7 @@ use Basis\Telemetry\Tracing\Tracer;
 use Basis\Telemetry\Tracing\Transport;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class Zipkin implements Transport
+class ZipkinTransport implements Transport
 {
     public function __construct(
         private HttpClientInterface $client,
