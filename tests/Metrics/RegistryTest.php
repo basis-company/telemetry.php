@@ -2,8 +2,8 @@
 
 namespace Tests\Metrics;
 
-use PHPUnit\Framework\TestCase;
 use Basis\Telemetry\Metrics\Registry;
+use PHPUnit\Framework\TestCase;
 
 class RegistryTest extends TestCase
 {
