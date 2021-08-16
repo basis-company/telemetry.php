@@ -58,8 +58,8 @@ echo $exporter->toString('mailer_', ['env' => 'test']);
 <?php
 
 use Basis\Telemetry\Tracing\Builder;
-use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Exporter\ZipkinExporter;
+use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Transport\ZipkinTransport;
 use Symfony\Component\HttpClient\CurlHttpClient;
 
