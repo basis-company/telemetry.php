@@ -2,7 +2,7 @@
 
 namespace Tests\Metrics;
 
-use Basis\Telemetry\Metrics\Exporter\Exporter;
+use Basis\Telemetry\Metrics\Exporter;
 use Basis\Telemetry\Metrics\Exporter\Prometheus;
 use Basis\Telemetry\Metrics\Info;
 use Basis\Telemetry\Metrics\Registry;

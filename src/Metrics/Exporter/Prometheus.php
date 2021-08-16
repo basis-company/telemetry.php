@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Basis\Telemetry\Metrics\Exporter;
 
+use Basis\Telemetry\Metrics\Exporter;
 use Basis\Telemetry\Metrics\Info;
 use Basis\Telemetry\Metrics\Registry;
 
