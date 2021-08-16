@@ -1,5 +1,5 @@
 {
-    "name": "basis-company/telemtry",
+    "name": "basis-company/telemetry",
     "description": "telemetry framework",
     "require": {
         "php": ">=8"
