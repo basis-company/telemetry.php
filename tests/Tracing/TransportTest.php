@@ -14,10 +14,13 @@ class TransportTest extends TestCase
     public function testZipkin()
     {
         $tracer = new Tracer();
-        $span = $tracer->getActiveSpan()->end();
+        $span = $tracer->getActiveSpan();
+        $event = $span->addEvent('hello world');
+        $span->setAttribute('nick', 'nekufa');
+        $span->end();
 
         $client = new MockHttpClient([
-            function ($method, $url, $options) use ($span) {
+            function ($method, $url, $options) use ($span, $event) {
                 $this->assertSame($url, 'http://zipkin-hostname:9411/api/v2/spans');
                 $this->assertNotNull($options['body']);
                 $data = json_decode($options['body']);
@@ -33,6 +36,13 @@ class TransportTest extends TestCase
                 $this->assertSame($row->duration, (int) $duration);
 
                 $this->assertEquals($row->localEndpoint, (object) [ 'serviceName' => 'tester' ]);
+                $this->assertCount(1, get_object_vars($row->tags));
+                $this->assertSame($row->tags->nick, 'nekufa');
+                $this->assertCount(1, $row->annotations);
+
+                [ $annotation ] = $row->annotations;
+                $this->assertSame($annotation->value, 'hello world');
+                $this->assertSame($annotation->timestamp, (int) round(1000000 * $event->getTimestamp()));
 
                 return new MockResponse('OK');
             }
