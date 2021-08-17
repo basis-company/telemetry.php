@@ -31,6 +31,6 @@ class ZipkinTransport implements Transport
             'body' => json_encode($data),
         ]);
 
-        return $response->getStatusCode() == 200;
+        return $response->getStatusCode() == 202;
     }
 }

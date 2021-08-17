@@ -16,7 +16,7 @@ class ZipkinExporter extends Exporter
 
     public function convertSpan(Span $span): array
     {
-        return [
+        $result = [
             'id' => $span->getSpanContext()->getSpanId(),
             'traceId' => $span->getSpanContext()->getTraceId(),
             'parentId' => $span->getParentSpanContext() ? $span->getParentSpanContext()->getSpanId() : null,
@@ -27,6 +27,14 @@ class ZipkinExporter extends Exporter
             'annotations' => $this->convertEvents($span->getEvents()),
             'tags' => $this->convertAttributes($span->getAttributes()),
         ];
+
+        foreach ($result as $k => $v) {
+            if (is_array($v) && !count($v)) {
+                unset($result[$k]);
+            }
+        }
+
+        return $result;
     }
 
     private function convertEvents(array $events): array
