@@ -10,6 +10,11 @@ use Basis\Telemetry\Metrics\Registry;
 
 class PrometheusExporter extends Exporter
 {
+    public function toFile(string $path, string $prefix = '', array $labels = []): void
+    {
+        file_put_contents($path, $this->toString($prefix, $labels));
+    }
+
     public function toString(string $prefix = '', array $labels = []): string
     {
         $info = [];

@@ -33,7 +33,12 @@ class ImporterTest extends TestCase
         $registry2 = new Registry();
         $info2 = new Info();
         $importer = new PrometheusImporter($registry2, $info2);
-        $importer->fromString($exporter->toString('tester_'), 'tester_');
+        $filename = '/tmp/' . bin2hex(random_bytes(32));
+
+        $exporter->toFile($filename, 'tester_');
+        $importer->fromFile($filename, 'tester_');
+
+        unlink($filename);
 
         $keys = [
             ['memory_usage', []],

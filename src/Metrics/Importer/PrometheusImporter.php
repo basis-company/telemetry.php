@@ -12,6 +12,10 @@ class PrometheusImporter
     public function __construct(private Registry $registry, private Info $info)
     {
     }
+    public function fromFile(string $path, string $prefix = ''): self
+    {
+        return $this->fromString(file_get_contents($path), $prefix);
+    }
 
     public function fromString(string $string, string $prefix = ''): self
     {
