@@ -33,4 +33,29 @@ class Info
 
         return $this;
     }
+
+    public function update(string $key, string $type, string $value): self
+    {
+        if (!in_array($type, ['help', 'type'])) {
+            throw new InvalidArgumentException("Invalid update call");
+        }
+
+        if (!array_key_exists($key, $this->data)) {
+            if ($type == 'help') {
+                // initialize info with default metric type
+                return $this->set($key, $value);
+            } else {
+                // disable initialize with empty help
+                throw new InvalidArgumentException("Invalid key $key");
+            }
+        }
+
+        if ($type == 'type' && !Type::isValid($value)) {
+            throw new InvalidArgumentException("Invalid type $value");
+        }
+
+        $this->data[$key][$type] = $value;
+
+        return $this;
+    }
 }
