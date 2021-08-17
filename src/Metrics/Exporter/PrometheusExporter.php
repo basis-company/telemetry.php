@@ -17,16 +17,14 @@ class PrometheusExporter extends Exporter
 
     public function toString(string $prefix = '', array $labels = []): string
     {
-        $info = [];
         $result = [];
 
         foreach ($this->toArray($labels) as $row) {
             $key = $prefix . $row['key'];
 
-            if (!array_key_exists($key, $info)) {
-                $result[] = sprintf('# HELP %s %s', $key, $row['help']);
-                $result[] = sprintf('# TYPE %s %s', $key, $row['type']);
-                $info[$key] = true;
+            if (!array_key_exists($key . '!h', $result)) {
+                $result[$key . '!h'] = sprintf('# HELP %s %s', $key, $row['help']);
+                $result[$key . '!t'] = sprintf('# TYPE %s %s', $key, $row['type']);
             }
 
             $rowLabels = [];
@@ -37,8 +35,10 @@ class PrometheusExporter extends Exporter
                 $key .= '{' . implode(',', $rowLabels) . '}';
             }
 
-            $result[] = sprintf('%s %s', $key, $row['value']);
+            $result[$key] = sprintf('%s %s', $key, $row['value']);
         }
+
+        ksort($result);
 
         return implode(PHP_EOL, $result);
     }

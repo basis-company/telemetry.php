@@ -80,6 +80,32 @@ class ExporterTest extends TestCase
 
         $this->assertCount(2, explode('HELP svc_request_counter', $result));
     }
+
+    public function testMetricsOrder()
+    {
+        $registry = new Registry();
+        $registry->set('todo', 1, ['queue' => 'web.bundle']);
+        $registry->set('complete', 2, ['queue' => 'flow.promote']);
+        $registry->set('todo', 3, ['queue' => 'space.housekeeping']);
+
+        $info = new Info();
+        $info->set('todo', 'waiting');
+        $info->set('complete', 'complete');
+
+        $string = (new PrometheusExporter($registry, $info))->toString();
+
+        $shouldbe = implode(PHP_EOL, [
+            '# HELP complete complete',
+            '# TYPE complete gauge',
+            'complete{queue="flow.promote"} 2',
+            '# HELP todo waiting',
+            '# TYPE todo gauge',
+            'todo{queue="space.housekeeping"} 3',
+            'todo{queue="web.bundle"} 1',
+        ]);
+        $this->assertSame($string, $shouldbe);
+    }
+
     public function testExtraLabels()
     {
         $registry = new Registry();
