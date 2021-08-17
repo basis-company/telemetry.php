@@ -12,6 +12,13 @@ class Tracer
 
     public function __construct(SpanContext $context = null)
     {
+        $this->reset($context);
+    }
+
+    public function reset(SpanContext $context = null)
+    {
+        $this->spans = [];
+        $this->tail = [];
         $context = $context ?: SpanContext::generate();
         $this->active = $this->generateSpanInstance('tracer', $context);
     }

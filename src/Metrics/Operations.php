@@ -43,4 +43,9 @@ class Operations
     {
         return count($this->data);
     }
+
+    public function reset()
+    {
+        $this->data = [];
+    }
 }

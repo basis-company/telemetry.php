@@ -32,5 +32,8 @@ class OperationsTest extends TestCase
 
         $this->assertSame(2, $registry->get('request_counter', [ 'hostname' => 1 ]));
         $this->assertSame(42 * 2, $registry->get('request_timing', [ 'hostname' => 1 ]));
+
+        $operations->reset();
+        $this->assertSame(0, $operations->count());
     }
 }

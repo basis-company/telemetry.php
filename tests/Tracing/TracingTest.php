@@ -11,6 +11,25 @@ use PHPUnit\Framework\TestCase;
 
 class TracingTest extends TestCase
 {
+    public function testReset()
+    {
+        $tracer = new Tracer();
+        $this->assertCount(1, $tracer->getSpans());
+        $active = $tracer->getActiveSpan();
+
+        $tracer->createSpan('a');
+        $tracer->createSpan('b');
+        $this->assertCount(3, $tracer->getSpans());
+
+        $tracer->reset();
+        $this->assertCount(1, $tracer->getSpans());
+
+        $this->assertNotSame(
+            $active->getSpanContext()->getSpanId(),
+            $tracer->getActiveSpan()->getSpanContext()->getSpanId(),
+        );
+    }
+
     public function testContextGenerationAndRestore()
     {
         $spanContext = SpanContext::generate();
