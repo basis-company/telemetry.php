@@ -19,49 +19,52 @@ class PrometheusImporter
 
     public function fromString(string $string, string $prefix = ''): self
     {
-        $info = [];
-        $values = [];
-
         foreach (explode(PHP_EOL, $string) as $line) {
             if (substr($line, 0, 1) == '#') {
-                [$_, $type, $nick, $value] = explode(' ', $line, 4);
-                if ($prefix && strpos($nick, $prefix) === 0) {
-                    $nick = substr($nick, strlen($prefix));
-                }
-                if (!array_key_exists($nick, $info)) {
-                    $info[$nick] = compact('nick');
-                }
-                $info[$nick][strtolower($type)] = $value;
+                $this->parseInfoLine($line, $prefix);
             } else {
-                $labels = [];
-                [$nick, $value] = explode(' ', $line);
-                if ($prefix && strpos($nick, $prefix) === 0) {
-                    $nick = substr($nick, strlen($prefix));
-                }
-                if (strpos($nick, '{') !== false) {
-                    [$nick, $postfix] = explode('{', trim($nick, '}'), 2);
-                    foreach (explode(',', $postfix) as $chunk) {
-                        [$k, $v] = explode('=', $chunk, 2);
-                        $labels[$k] = trim($v, '"');
-                    }
-                }
-                if ("" . intval($value) == $value) {
-                    $value = intval($value);
-                } else {
-                    $value = floatval($value);
-                }
-                $values[] = compact('nick', 'labels', 'value');
+                $this->parseDataLine($line, $prefix);
             }
         }
 
-        foreach ($info as $row) {
-            $this->info->set($row['nick'], $row['help'], $row['type']);
-        }
-
-        foreach ($values as $row) {
-            $this->registry->set($row['nick'], $row['value'], $row['labels']);
-        }
-
         return $this;
+    }
+
+    private function parseInfoLine(string $line, string $prefix)
+    {
+        [$_, $type, $nick, $value] = explode(' ', $line, 4);
+        if ($prefix && strpos($nick, $prefix) === 0) {
+            $nick = substr($nick, strlen($prefix));
+        }
+
+        $type = strtolower($type);
+
+        $this->info->update($nick, $type, $value);
+    }
+
+    private function parseDataLine(string $line, string $prefix)
+    {
+        [$nick, $value] = explode(' ', $line);
+
+        if ($prefix && strpos($nick, $prefix) === 0) {
+            $nick = substr($nick, strlen($prefix));
+        }
+
+        $labels = [];
+        if (strpos($nick, '{') !== false) {
+            [$nick, $postfix] = explode('{', trim($nick, '}'), 2);
+            foreach (explode(',', $postfix) as $chunk) {
+                [$k, $v] = explode('=', $chunk, 2);
+                $labels[$k] = trim($v, '"');
+            }
+        }
+
+        if ("" . intval($value) == $value) {
+            $value = intval($value);
+        } else {
+            $value = floatval($value);
+        }
+
+        $this->registry->set($nick, $value, $labels);
     }
 }
