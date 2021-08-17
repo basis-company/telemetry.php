@@ -1,6 +1,6 @@
 {
     "name": "basis-company/telemetry",
-    "description": "telemetry framework",
+    "description": "telemetry framework for php",
     "require": {
         "php": ">=8"
     },
@@ -20,5 +20,8 @@
             "email": "nekufa@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "suggest": {
+        "symfony/http-client": "Zipkin integration transport"
+    }
 }

@@ -19,7 +19,8 @@ $ composer require basis-company/telemetry
 ```php
 <?php
 
-use Basis\Telemetry\Metrics\Exporter\Prometheus;
+use Basis\Telemetry\Metrics\Exporter\PrometheusExporter;
+use Basis\Telemetry\Metrics\Importer\PrometheusImporter;
 use Basis\Telemetry\Metrics\Info;
 use Basis\Telemetry\Metrics\Registry;
 
@@ -34,11 +35,14 @@ $registry->set('uptime', 30);
 $info = new Info();
 $info->set('memory_usage', 'Memory usage');
 $info->set('request_counter', 'Request Counter', Type::COUNTER);
-$info->set('uptime', 'Uptime', Type::COUNTER);
+$info->set('uptime', 'Uptime in seconds', Type::COUNTER);
 
-$exporter = new Prometheus($registry, $info);
+$exporter = new PrometheusExporter($registry, $info);
 // render prometheus metrics with service prefix and optional extra labels
 echo $exporter->toString('mailer_', ['env' => 'test']);
+
+// or write result to a file
+$exporter->toFile('public/metrics', 'mailer_');
 
 // # HELP mailer_request_counter Request Counter
 // # TYPE mailer_request_counter counter
@@ -51,6 +55,16 @@ echo $exporter->toString('mailer_', ['env' => 'test']);
 // # TYPE mailer_uptime counter
 // mailer_uptime{env="test"} 30
 
+$remoteRegistry = new Registry();
+$remoteInfo = new Info();
+$importer = new PrometheusImporter($remoteRegistry, $remoteInfo);
+
+// cut prefix and import registry data and info configuration
+$importer->fromFile('public/metrics', 'mailer_');
+
+// prometheus metrics were parsed and prefix removed
+echo $remoteRegistry->get('uptime'); // 30
+echo $remoteInfo->get('uptime')['help']; // Uptime in seconds
 ```
 
 ## Tracing
