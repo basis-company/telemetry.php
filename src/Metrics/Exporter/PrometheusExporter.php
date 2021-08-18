@@ -35,7 +35,7 @@ class PrometheusExporter extends Exporter
                 $key .= '{' . implode(',', $rowLabels) . '}';
             }
 
-            $result[$key] = sprintf('%s %s', $key, $row['value']);
+            $result[$key . '_'] = sprintf('%s %s', $key, $row['value']);
         }
 
         ksort($result);

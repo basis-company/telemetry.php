@@ -87,10 +87,12 @@ class ExporterTest extends TestCase
         $registry->set('todo', 1, ['queue' => 'web.bundle']);
         $registry->set('complete', 2, ['queue' => 'flow.promote']);
         $registry->set('todo', 3, ['queue' => 'space.housekeeping']);
+        $registry->set('counter', 1);
 
         $info = new Info();
         $info->set('todo', 'waiting');
         $info->set('complete', 'complete');
+        $info->set('counter', 'example');
 
         $string = (new PrometheusExporter($registry, $info))->toString();
 
@@ -98,6 +100,9 @@ class ExporterTest extends TestCase
             '# HELP complete complete',
             '# TYPE complete gauge',
             'complete{queue="flow.promote"} 2',
+            '# HELP counter example',
+            '# TYPE counter gauge',
+            'counter 1',
             '# HELP todo waiting',
             '# TYPE todo gauge',
             'todo{queue="space.housekeeping"} 3',
