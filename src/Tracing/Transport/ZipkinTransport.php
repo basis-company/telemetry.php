@@ -20,9 +20,20 @@ class ZipkinTransport implements Transport
     ) {
     }
 
+    public function getClient(): HttpClientInterface
+    {
+        return $this->client;
+    }
+
     public function getUrl(): string
     {
         return sprintf('%s://%s:%s%s', $this->schema, $this->hostname, $this->port, $this->path);
+    }
+
+    public function setClient(HttpClientInterface $client): self
+    {
+        $this->client = $client;
+        return $this;
     }
 
     public function write(array $data): bool
