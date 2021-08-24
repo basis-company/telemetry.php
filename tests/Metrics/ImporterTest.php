@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class ImporterTest extends TestCase
 {
-    public function test(): void
+    public function testPrometheus(): void
     {
         $registry = new Registry();
         $registry->set('memory_usage', memory_get_usage(true));

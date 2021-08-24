@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class InfoTest extends TestCase
 {
-    public function test(): void
+    public function testBasics(): void
     {
         $info = new Info();
 
