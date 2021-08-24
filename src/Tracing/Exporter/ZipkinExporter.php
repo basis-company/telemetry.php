@@ -56,10 +56,7 @@ class ZipkinExporter extends Exporter
         $tags = [];
 
         foreach ($attributes as $k => $v) {
-            if (is_bool($v)) {
-                $v = (string) $v;
-            }
-            $tags[$k] = $v;
+            $tags[$k] = (string) $v;
         }
 
         return $tags;

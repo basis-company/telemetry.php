@@ -19,6 +19,7 @@ class TransportTest extends TestCase
         $span = $tracer->getActiveSpan();
         $event = $span->addEvent('hello world');
         $span->setAttribute('nick', 'nekufa');
+        $span->setAttribute('counter', 27);
         $span->end();
 
         $client = new MockHttpClient([
@@ -38,8 +39,9 @@ class TransportTest extends TestCase
                 $this->assertSame($row->duration, (int) $duration);
 
                 $this->assertEquals($row->localEndpoint, (object) [ 'serviceName' => 'tester' ]);
-                $this->assertCount(1, get_object_vars($row->tags));
+                $this->assertCount(2, get_object_vars($row->tags));
                 $this->assertSame($row->tags->nick, 'nekufa');
+                $this->assertSame($row->tags->counter, '27');
                 $this->assertCount(1, $row->annotations);
 
                 [ $annotation ] = $row->annotations;
