@@ -32,7 +32,12 @@ class PrometheusImporter
 
     private function parseInfoLine(string $line, string $prefix)
     {
-        [$_, $type, $nick, $value] = explode(' ', $line, 4);
+        $parts = explode(' ', $line, 4);
+        if (count($parts) < 4) {
+            return null;
+        }
+
+        [$_, $type, $nick, $value] = $parts;
         if ($prefix && strpos($nick, $prefix) === 0) {
             $nick = substr($nick, strlen($prefix));
         }
