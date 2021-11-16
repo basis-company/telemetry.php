@@ -49,6 +49,10 @@ class PrometheusImporter
 
     private function parseDataLine(string $line, string $prefix)
     {
+        if (strpos($line, ' ') === false) {
+            return;
+        }
+
         [$nick, $value] = explode(' ', $line);
 
         if ($prefix && strpos($nick, $prefix) === 0) {

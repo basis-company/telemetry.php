@@ -15,6 +15,15 @@ use PHPUnit\Framework\TestCase;
 
 class ImporterTest extends TestCase
 {
+    public function testInvalidLine(): void
+    {
+        $registry = new Registry();
+        $info = new Info();
+        $importer = new PrometheusImporter($registry, $info);
+        $importer->fromString("");
+        $this->assertCount(0, $registry->toArray());
+    }
+
     public function testPrometheus(): void
     {
         $registry = new Registry();
