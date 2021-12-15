@@ -1,6 +1,7 @@
 {
     "name": "basis-company/telemetry",
     "description": "telemetry framework for php",
+    "keywords": ["telemetry", "opentelemetry", "tracing", "span", "metrics", "prometheus", "zipkin"],
     "require": {
         "php": ">=8"
     },
