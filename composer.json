@@ -21,7 +21,6 @@
             "email": "nekufa@gmail.com"
         }
     ],
-    "require": {},
     "suggest": {
         "symfony/http-client": "Zipkin integration transport"
     }
