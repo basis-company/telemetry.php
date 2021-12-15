@@ -1,7 +1,6 @@
 # Service telemetry for php
 [![License](https://poser.pugx.org/basis-company/telemetry/license.png)](https://packagist.org/packages/basis-company/telemetry)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/basis-company/telemetry.php/badges/quality-score.png?b=main)](
-https://scrutinizer-ci.com/g/basis-company/telemetry.php/?branch=main)
+[![Testing](https://github.com/basis-company/telemetry.php/actions/workflows/tests.yml/badge.svg)](https://github.com/basis-company/telemetry.php/actions/workflows/tests.yml)
 [![Latest Version](https://img.shields.io/github/release/basis-company/telemetry.php.svg?style=flat-square)](https://github.com/basis-company/telemetry.php/releases)
 [![Total Downloads](https://img.shields.io/packagist/dt/basis-company/telemetry.svg?style=flat-square)](https://packagist.org/packages/basis-company/telemetry)
 
