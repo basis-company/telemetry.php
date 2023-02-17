@@ -10,6 +10,14 @@ use Basis\Telemetry\Metrics\Registry;
 
 class PrometheusExporter extends Exporter
 {
+    private int $decimals = 3;
+
+    public function setDecimals(int $decimals): self
+    {
+        $this->decimals = $decimals;
+        return $this;
+    }
+
     public function toFile(string $path, string $prefix = '', array $labels = []): void
     {
         file_put_contents($path, $this->toString($prefix, $labels));
@@ -35,7 +43,12 @@ class PrometheusExporter extends Exporter
                 $key .= '{' . implode(',', $rowLabels) . '}';
             }
 
-            $result[$key . '_'] = sprintf('%s %s', $key, $row['value']);
+            $value = $row['value'];
+            if (is_float($value)) {
+                $value = number_format($value, $this->decimals);
+            }
+
+            $result[$key . '_'] = sprintf('%s %s', $key, $value);
         }
 
         ksort($result);

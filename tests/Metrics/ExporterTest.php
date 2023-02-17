@@ -81,6 +81,31 @@ class ExporterTest extends TestCase
         $this->assertCount(2, explode('HELP svc_request_counter', $result));
     }
 
+    public function testFloat()
+    {
+        $registry = new Registry();
+        $timestamp = microtime(true);
+        usleep(40 * 1000);
+        $registry->set('tester', microtime(true) - $timestamp);
+
+        $info = new Info();
+        $info->set('tester', 'float value');
+
+        $exporter = new PrometheusExporter($registry, $info);
+
+        $exporter->setDecimals(3);
+        $this->assertEquals("tester 0.040", explode(PHP_EOL, $exporter->toString())[2]);
+
+        $exporter->setDecimals(2);
+        $this->assertEquals("tester 0.04", explode(PHP_EOL, $exporter->toString())[2]);
+
+        $exporter->setDecimals(1);
+        $this->assertEquals("tester 0.0", explode(PHP_EOL, $exporter->toString())[2]);
+
+        $exporter->setDecimals(0);
+        $this->assertEquals("tester 0", explode(PHP_EOL, $exporter->toString())[2]);
+    }
+
     public function testMetricsOrder()
     {
         $registry = new Registry();
