@@ -11,6 +11,8 @@ use Basis\Telemetry\Metrics\Registry;
 class PrometheusExporter extends Exporter
 {
     private int $decimals = 3;
+    public string $thousandsSeparator = "";
+    public string $decimalSeparator = ".";
 
     public function setDecimals(int $decimals): self
     {
@@ -45,7 +47,7 @@ class PrometheusExporter extends Exporter
 
             $value = $row['value'];
             if (is_float($value)) {
-                $value = number_format($value, $this->decimals);
+                $value = number_format($value, $this->decimals, $this->decimalSeparator, $this->thousandsSeparator);
             }
 
             $result[$key . '_'] = sprintf('%s %s', $key, $value);
